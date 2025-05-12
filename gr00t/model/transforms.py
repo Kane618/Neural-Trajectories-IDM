@@ -64,6 +64,9 @@ class DefaultDataCollatorGR00T(DataCollatorMixin):
 class GR00TTransform(InvertibleModalityTransform):
     _EMBODIMENT_TAG_MAPPING = {
         "gr1": 24,
+        "franka": 17,
+        "so100": 26,
+        "robocasa_panda_omron": 13,
         "new_embodiment": 31,  # use the last projector for new embodiment,
     }
 
@@ -188,8 +191,14 @@ class GR00TTransform(InvertibleModalityTransform):
                     raw_language = self.default_instruction
         else:
             raw_language = self.default_instruction
+        
+        if "<DREAM>" in raw_language:
+            raw_language = raw_language.replace("<DREAM>", "")
+            is_dream_instance = True
+        else:
+            is_dream_instance = False
 
-        return raw_language
+        return raw_language, is_dream_instance
 
     def _prepare_state(self, data: dict):
         """
@@ -258,7 +267,7 @@ class GR00TTransform(InvertibleModalityTransform):
         # 1) Prepare video and language with vlm processing.
         images = self._prepare_video(data)
         images = images.astype(np.uint8)
-        language = self._prepare_language(data)
+        language, is_dream_instance = self._prepare_language(data)
 
         vlm_batch = {"images": images, "language": language}
         vlm_outputs = self._apply_gr00t_processing(vlm_batch)
@@ -267,6 +276,10 @@ class GR00TTransform(InvertibleModalityTransform):
         state, state_mask, _ = self._prepare_state(data)
         transformed_data["state"] = state
         transformed_data["state_mask"] = state_mask
+
+        if is_dream_instance:
+            transformed_data["state"] = np.zeros_like(transformed_data["state"])
+            
 
         if self.training:
             # 3) Prepare actions

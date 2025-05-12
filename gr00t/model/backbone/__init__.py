@@ -14,3 +14,4 @@
 # limitations under the License.
 
 from .eagle_backbone import EagleBackbone  # noqa: F401
+from .identity import IdentityBackbone  # noqa: F401

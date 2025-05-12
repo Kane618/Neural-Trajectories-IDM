@@ -22,6 +22,26 @@ class EmbodimentTag(Enum):
     The GR1 dataset.
     """
 
+    GR1_unified = "gr1_unified"
+    """
+    The GR1 unified dataset.
+    """
+    
+    FRANKA = "franka"
+    """
+    The FRANKA dataset.
+    """
+
+    SO100 = "so100"
+    """
+    The SO100 dataset.
+    """
+
+    ROBOCASA = "robocasa_panda_omron"
+    """
+    The ROBOCASA dataset.
+    """
+
     NEW_EMBODIMENT = "new_embodiment"
     """
     Any new embodiment for finetuning.

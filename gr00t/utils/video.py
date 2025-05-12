@@ -164,3 +164,34 @@ def get_all_frames(
         frames = [cv2.resize(frame, resize_size) for frame in frames]
         frames = np.array(frames)
     return frames
+
+
+def get_all_frames_and_timestamps(
+    video_path: str,
+    video_backend: str = "decord",
+    video_backend_kwargs: dict = {},
+) -> tuple[np.ndarray, np.ndarray]:
+    """Get all frames from a video.
+
+    Returns:
+        tuple[np.ndarray, np.ndarray]: Frames and timestamps.
+    """
+    if video_backend == "decord":
+        vr = decord.VideoReader(video_path, **video_backend_kwargs)
+        frames = vr.get_batch(range(len(vr))).asnumpy()
+        return frames, vr.get_frame_timestamp(range(len(vr)))[:, 0]
+
+    elif video_backend == "pyav":
+        container = av.open(video_path)
+        stream = container.streams.video[0]
+        assert stream.time_base is not None
+        frames = []
+        timestamps = []
+        for frame in container.decode(video=0):
+            frames.append(frame.to_ndarray(format="rgb24"))
+            timestamps.append(frame.pts * stream.time_base)
+        container.close()
+        return np.stack(frames), np.array(timestamps)
+
+    else:
+        raise NotImplementedError
