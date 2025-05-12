@@ -491,13 +491,13 @@ def main():
         )
 
     if args.embodiment == "gr1_unified": 
-        source_dir = "global_metadata/gr1"
+        source_dir = "IDM_dump/global_metadata/gr1"
     elif args.embodiment == "robocasa_panda_omron":
-        source_dir = "global_metadata/robocasa"
+        source_dir = "IDM_dump/global_metadata/robocasa"
     elif args.embodiment == "franka":
-        source_dir = "global_metadata/franka"
+        source_dir = "IDM_dump/global_metadata/franka"
     elif args.embodiment == "so100":
-        source_dir = "global_metadata/so100"
+        source_dir = "IDM_dump/global_metadata/so100"
     
     # copy modality.json
     shutil.copy(source_dir + "/modality.json", args.output_dir + "/meta/modality.json")

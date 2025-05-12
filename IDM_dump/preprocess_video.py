@@ -210,8 +210,8 @@ def process_video(args):
     output_videos = {}
     for name, dir_path in output_dirs.items():
         output_path = os.path.join(dir_path, f"{video_name}.mp4")
-        # fourcc = cv2.VideoWriter_fourcc(*'mp4v')
-        fourcc = cv2.VideoWriter_fourcc(*'avc1')
+        fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+        # fourcc = cv2.VideoWriter_fourcc(*'avc1')
         output_videos[name] = cv2.VideoWriter(output_path, fourcc, fps, (256, 256))  # Updated size to 256x256
 
     
